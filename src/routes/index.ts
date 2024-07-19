@@ -4,16 +4,16 @@
 
 import express, { Request, Response} from 'express';
 import helloRouter from './HelloRouter';
-import { LogInfo } from '@/utils/logger';
+import { LogInfo } from '../utils/logger';
 
 //server instance
-let server:express = express();
+let server = express();
 
 //Rputer instance
 let rootRouter = express.Router();
 
 //GET: http://localhost:8000/api/
-app.get('/',(req:Request, res:Response) => {
+server.get('/',(req:Request, res:Response) => {
     LogInfo('GET: http://localhost:8000/api/');
     res.send("welcome");
 });
