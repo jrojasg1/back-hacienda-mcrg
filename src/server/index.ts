@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/semi */
 import express, { Express, Request, Response } from 'express';
 import cors from 'cors';// Security
 import helmet from 'helmet';
@@ -15,6 +16,9 @@ const server: Express = express()
 server.use(
     '/api',
     router);
+
+// Static server
+server.use(express.static('public'));
 
 // TODO Mongoose Connection
 
