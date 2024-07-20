@@ -4,7 +4,8 @@
   "description": "backend node + TS + express + swagger",
   "main": "index.js",
   "scripts": {
-    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\"",
+    "swagger": "tsoa spec",
+    "dev": "concurrently \"npx tsc --watch\" \"npx run swagger\" \"nodemon -q dist/index.js\"",
     "test": "jest",
     "serve:coverage": "cd coverage/lcov-report && npx serve",
     "build": "npx webpack --mode development",
