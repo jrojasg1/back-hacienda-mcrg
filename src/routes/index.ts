@@ -5,6 +5,7 @@
 import express, { Request, Response} from 'express';
 import helloRouter from './HelloRouter';
 import { LogInfo } from '../utils/logger';
+import usersRouter from './UserRouter';
 
 //server instance
 let server = express();
@@ -19,7 +20,8 @@ server.get('/',(req:Request, res:Response) => {
 });
 
 //manage router & controllers
-server.use('/',rootRouter);
-server.use('/hello',helloRouter); 
+server.use('/', rootRouter);
+server.use('/hello', helloRouter); 
+server.use('/users', usersRouter); // http://localhost:8000/users/ -> userRouter
 
 export default server;

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "swagger": "tsoa spec",
-    "dev": "concurrently \"npx tsc --watch\" \"npx run swagger\" \"nodemon -q dist/index.js\"",
+    "dev": "concurrently \"npx tsc --watch\" \"npx run swagger\"  \"nodemon -q dist/index.js\"",
     "test": "jest",
     "serve:coverage": "cd coverage/lcov-report && npx serve",
     "build": "npx webpack --mode development",

@@ -1,7 +1,7 @@
 import { Get, Query, Route, Tags } from 'tsoa';
 import { BasicResponse } from './types';
 import { type IHelloController } from './interfaces';
-import { LogSuccess } from '../utils/logger;'
+import { LogSuccess } from '../utils/logger';
 
 @Route("/api/hello")
 @Tags("HelloController")
