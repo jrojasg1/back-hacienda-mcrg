@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/consistent-type-definitions */
 /**
  * Basic JSON response for Controllers
  */
@@ -9,6 +10,14 @@ export type BasicResponse = {
  * error JSON responses for Controllers
  */
 export type ErrorResponse = {
-  message: string
+  message: string,
   error: string
+}
+
+/**
+ * Auth JSON responses for Controllers
+ */
+export type AuthResponse = {
+  message: string,
+  token: string
 }

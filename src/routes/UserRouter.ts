@@ -1,11 +1,14 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/semi */
-import express, { type Request, type Response } from 'express'
-import { UserController } from '../controller/UsersController'
-import { LogInfo } from '../utils/logger'
+import express, { type Request, type Response } from 'express';
+import { UserController } from '../controller/UsersController';
+import { LogInfo } from '../utils/logger';
+// Body Parser to read Body from request
+import bodyParser from "body-parser";
 
+let jsonParser = bodyParser.json();
 // Router from express
-const usersRouter = express.Router()
+const usersRouter = express.Router();
 
 // http://localhost:8000/api/users/?id=78595ijufdjfdfmvk7884
 usersRouter.route('/')
@@ -25,22 +28,7 @@ usersRouter.route('/')
     LogInfo(`Query Param ${id}`); 
     const controller: UserController = new UserController();
     const response: any = await controller.deleteUser(id);
-    return res.send(response);
-  })
-  .post(async (req: Request, res: Response) => {
-    let name: any = req?.query?.name;
-    let age: any = req?.query?.age;
-    let email: any = req?.query?.email;
-
-    let user = {
-      name: name || 'deafault',
-      email: email || 'deafault email',
-      age: age || 18
-    };
-
-    const controller: UserController = new UserController();
-    const response: any = await controller.createUser(user);
-    return res.send(response);
+    return res.status(200).send(response);
   })
   .put(async (req: Request, res: Response) => {
     let id: string = req?.query?.id
@@ -58,8 +46,9 @@ usersRouter.route('/')
 
     const controller: UserController = new UserController();
     const response: any = await controller.updateUser(user, id);
-    return res.send(response);
+    return res.status(200).send(response);
   })
+
 
 
 export default usersRouter;

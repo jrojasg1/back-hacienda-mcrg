@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/space-before-blocks */
 /* eslint-disable @typescript-eslint/semi */
 import { Delete, Get, Post, Put, Query, Route, Tags } from "tsoa";
 import { IUserController } from "./interfaces";
@@ -7,6 +8,8 @@ import { LogSuccess, LogError, LogWarning } from "../utils/logger";
 import { getAllUsers, getUserById, deleteUserById, createUser, updateUserById } from "../domain/orm/User.orm";
 import { BasicResponse } from "./types";
 import Response from 'express';
+
+
 
 @Route("/api/users")
 @Tags("UserController")
@@ -42,39 +45,39 @@ export class UserController implements IUserController {
       LogSuccess(`[/api/users] Get User By Id: ${id}`);
       await deleteUserById(id).then((r) => {
         response = {
+          status: 204,
           message: `User with id ${id} deleted sucessfully`
         }
       })
     } else {
       LogWarning('[/api/users] Delete user Request WITHOUT Id');
       response = {
+        status: 400,
         message: 'Pleasem, provide an ID to remove from database'
       }
     }
     return response;
   }
 
-  @Post('/')
-  public async createUser(@Query() user:any): Promise<any> {
-    let response: any = '';
-    await createUser(user).then((r) => {
-      LogSuccess(`[/api/users] Create user: ${user}`)
-      response = {
-        mesage: `User created successfully: ${user.name}`
-      }
-    })
-    return response;
-  }
-
   @Put('/')
   public async updateUser(@Query() user: any, id: string): Promise<any> {
     let response: any = '';
-    await updateUserById(user, id).then((r) => {
-      LogSuccess(`[/api/users] Update user: ${user}`)
+    if (id){
+      await updateUserById(user, id).then((r) => {
+        LogSuccess(`[/api/users] Update user: ${user}`)
+        response = {
+          status: 204,
+          mesage: `User Updated successfully: ${user.name}`
+        }
+      })
+    } else {
+      LogWarning('[/api/users] Update user Request WITHOUT Id');
       response = {
-        mesage: `User Updated successfully: ${user.name}`
+        status: 400,
+        message: 'Pleasem, provide an ID to remove from database'
       }
-    })
+    }
+    
     return response;
   }
 

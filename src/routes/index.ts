@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/semi */
 /**
  * Root Router - Redirections
  */
@@ -6,6 +7,7 @@ import express, { Request, Response} from 'express';
 import helloRouter from './HelloRouter';
 import { LogInfo } from '../utils/logger';
 import usersRouter from './UserRouter';
+import authRouter from './AuthRouter';
 
 //server instance
 let server = express();
@@ -22,6 +24,7 @@ server.get('/',(req:Request, res:Response) => {
 //manage router & controllers
 server.use('/', rootRouter);
 server.use('/hello', helloRouter); 
-server.use('/users', usersRouter); // http://localhost:8000/users/ -> userRouter
+server.use('/users', usersRouter); // http://localhost:8000/api/users/ -> userRouter
+server.use('/auth', authRouter); // http://localhost:8000/api/auth -> authRouter
 
 export default server;
