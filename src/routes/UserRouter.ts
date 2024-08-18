@@ -5,6 +5,8 @@ import { UserController } from '../controller/UsersController';
 import { LogInfo } from '../utils/logger';
 // Body Parser to read Body from request
 import bodyParser from "body-parser";
+// middleware verify JWT
+import { verifyToken } from '../middlewares/verifyToken.middleware';
 
 let jsonParser = bodyParser.json();
 // Router from express
@@ -12,25 +14,29 @@ const usersRouter = express.Router();
 
 // http://localhost:8000/api/users/?id=78595ijufdjfdfmvk7884
 usersRouter.route('/')
-  .get(async (req: Request, res: Response) => {
+  .get(verifyToken, async (req: Request, res: Response) => {
     // obtain a Query Param (id)
     // eslint-disable-next-line prefer-const
-    let id: any = req?.query?.id
+    let id: any = req?.query?.id;
+    // Pagination
+    let page: any = req?.query?.page || 1;
+    let limit: any = req?.query?.limit || 10;
+
     LogInfo(`Query Param ${id}`); 
     // Controller Instance to execute
     const controller: UserController = new UserController();
-    const response: any = await controller.getUsers(id);
+    const response: any = await controller.getUsers(page, limit, id);
     // send response
     return res.send(response);
   })
-  .delete(async (req: Request, res: Response) => {
+  .delete(verifyToken, async (req: Request, res: Response) => {
     let id: any = req?.query?.id
     LogInfo(`Query Param ${id}`); 
     const controller: UserController = new UserController();
     const response: any = await controller.deleteUser(id);
     return res.status(200).send(response);
   })
-  .put(async (req: Request, res: Response) => {
+  .put(async (verifyToken, req: Request, res: Response) => {
     let id: string = req?.query?.id
     
 
@@ -48,7 +54,5 @@ usersRouter.route('/')
     const response: any = await controller.updateUser(user, id);
     return res.status(200).send(response);
   })
-
-
 
 export default usersRouter;

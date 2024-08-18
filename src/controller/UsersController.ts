@@ -5,9 +5,8 @@ import { IUserController } from "./interfaces";
 import { LogSuccess, LogError, LogWarning } from "../utils/logger";
 
 // ORM - Users Collection
-import { getAllUsers, getUserById, deleteUserById, createUser, updateUserById } from "../domain/orm/User.orm";
-import { BasicResponse } from "./types";
-import Response from 'express';
+import { getAllUsers, getUserById, deleteUserById, updateUserById } from "../domain/orm/User.orm";
+
 
 
 
@@ -21,14 +20,14 @@ export class UserController implements IUserController {
    * @returns All users o user found by ID
    */
   @Get("/")
-  public async getUsers (@Query() id?: string): Promise<any> {
+  public async getUsers (@Query() page: number, @Query() limit: number, @Query() id?: string): Promise<any> {
     let response: any = '';
     if (id) {
       LogSuccess(`[/api/users] Get User By Id: ${id}`);
       response = await getUserById(id);
     } else {
       LogSuccess('[/api/users] Get all users Request');
-      response = await getAllUsers();
+      response = await getAllUsers(page, limit);
     }
     return response;
   }

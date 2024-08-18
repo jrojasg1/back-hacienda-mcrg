@@ -9,6 +9,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 import dotenv from 'dotenv';
+import { UserResponse } from '../types/UsersResponse.type';
 dotenv.config();
 
 // obtain secret key to generate JWT
@@ -16,10 +17,25 @@ const secret = process.env.SECRETKEY || 'MYSECRETKEY';
 /**
  * Method to obtain all Users from Collection
  */
-export const getAllUsers = async () => {
+export const getAllUsers = async (page: number, limit: number) => {
   try {
     let userModel = userEntity();
-    return await userModel.find();
+
+    let response: any = {};
+    // Search all user(using pagination)
+    await userModel.find()
+      .limit(limit)
+      .skip((page - 1) * limit)
+      .select('name email age')
+      .exec().then((users: IUser[]) => {
+        response.users = users;
+      });
+    // Count total documents in "Users"
+    await userModel.countDocuments().then((total: number) => {
+      response.totalPages = Math.ceil(total / limit);
+      response.currentPage = page;
+    });
+    return response;
   } catch (error) {
     LogError(`[ORM ERROR]: Getting All Users: ${ error }`);
   }
@@ -29,7 +45,7 @@ export const getUserById = async (id: string) : Promise<any | undefined> => {
   try{
     let userModel = userEntity();
     // Search User By Id
-    return await userModel.findById(id);
+    return await userModel.findById(id).select('name email age');
   } catch ( error ) {
     LogError(`[ORM ERROR]: Getting  User By id: ${ error }`);
   }
@@ -43,17 +59,6 @@ export const deleteUserById = async (id: string) : Promise<any | undefined> => {
     return await userModel.deleteOne({ _id: id});
   } catch ( error ) {
     LogError(`[ORM ERROR]: Deleting  User By id: ${ error }`);
-  }
-}
-
-// - Create User
-export const createUser = async (user: any) : Promise<any | undefined> => {
-  try {
-    let userModel = userEntity();
-    // Delete User By Id
-    return await userModel.create(user);
-  } catch ( error ) {
-    LogError(`[ORM ERROR]: Creating  User: ${ error }`);
   }
 }
 
@@ -91,8 +96,8 @@ export const loginUser = async (auth: IAuth): Promise<any | undefined> => {
     await userModel.findOne({ email: auth.email }).then((user: IUser) => {
       userFound = user;
     }).catch((error) => {
-        console.error('[ERROR Authentication in ORM]: User Not Found');
-        throw new Error(`ERROR Authentication in ORM]: User Not Found:  ${ error }`)
+      console.error('[ERROR Authentication in ORM]: User Not Found');
+      throw new Error(`ERROR Authentication in ORM]: User Not Found:  ${ error }`)
     });
 
     // Check if password is valid
