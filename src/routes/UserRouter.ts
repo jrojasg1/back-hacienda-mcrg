@@ -36,7 +36,7 @@ usersRouter.route('/')
     const response: any = await controller.deleteUser(id);
     return res.status(200).send(response);
   })
-  .put(async (verifyToken, req: Request, res: Response) => {
+  .put(verifyToken, async (req: Request, res: Response) => {
     let id: string = req?.query?.id
     
 
@@ -53,6 +53,24 @@ usersRouter.route('/')
     const controller: UserController = new UserController();
     const response: any = await controller.updateUser(user, id);
     return res.status(200).send(response);
+  })
+
+  // http://localhost:8000/api/users/katas?id=0000000
+usersRouter.route('/katas')
+  .get(verifyToken, async (req: Request, res: Response) => {
+    // obtain a Query Param (id)
+    // eslint-disable-next-line prefer-const
+    let id: any = req?.query?.id;
+    // Pagination
+    let page: any = req?.query?.page || 1;
+    let limit: any = req?.query?.limit || 10;
+
+    LogInfo(`Query Param ${id}`); 
+    // Controller Instance to execute
+    const controller: UserController = new UserController();
+    const response: any = await controller.getKatas(page, limit, id);
+    // send response
+    return res.send(response);
   })
 
 export default usersRouter;

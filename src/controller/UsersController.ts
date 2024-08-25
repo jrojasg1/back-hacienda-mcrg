@@ -5,7 +5,7 @@ import { IUserController } from "./interfaces";
 import { LogSuccess, LogError, LogWarning } from "../utils/logger";
 
 // ORM - Users Collection
-import { getAllUsers, getUserById, deleteUserById, updateUserById } from "../domain/orm/User.orm";
+import { getAllUsers, getUserById, deleteUserById, updateUserById, getKatasFromUSer } from "../domain/orm/User.orm";
 
 
 
@@ -13,13 +13,13 @@ import { getAllUsers, getUserById, deleteUserById, updateUserById } from "../dom
 @Route("/api/users")
 @Tags("UserController")
 export class UserController implements IUserController {
-
+  
   /**
    * Endpoint to retreive the Users in the Collection "Users" of DB
    * @param {string} id  Id of uder to retreive (optional)
    * @returns All users o user found by ID
-   */
-  @Get("/")
+  */
+ @Get("/")
   public async getUsers (@Query() page: number, @Query() limit: number, @Query() id?: string): Promise<any> {
     let response: any = '';
     if (id) {
@@ -36,7 +36,7 @@ export class UserController implements IUserController {
    * Endpoint to delete user
    * @param {string} id 
    * @returns message informating if deletion successfully
-   */
+  */
   @Delete("/")
   public async deleteUser (@Query() id?: string): Promise<any> {
     let response: any = '';
@@ -57,7 +57,7 @@ export class UserController implements IUserController {
     }
     return response;
   }
-
+  
   @Put('/')
   public async updateUser(@Query() user: any, id: string): Promise<any> {
     let response: any = '';
@@ -80,4 +80,21 @@ export class UserController implements IUserController {
     return response;
   }
 
+  @Get('/katas')// users/katas/
+  public async getKatas(@Query() page: number, limit: number, id?: string): Promise<any> {
+    let response: any = '';
+
+    if (id) {
+      LogSuccess(`[/api/users] Get Katas from User by Id: ${id}`);
+      response = await getKatasFromUSer(page, limit, id);
+    } else {
+      LogSuccess('[/api/users] Get Katas without id');
+      response = {
+        message: 'ID from user is needed'
+      }
+    }
+
+    return response;
+  };
+  
 }

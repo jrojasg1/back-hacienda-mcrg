@@ -1,10 +1,11 @@
-enum KataLevel {
+export enum KataLevel {
   BASIC = 'BASIC',
   MEDIUM = 'MEDIUM',
   HIGH = 'HIGH'
 }
 
 export interface IKata {
+  id: string,
   name: string,
   description: string,
   level: KataLevel,

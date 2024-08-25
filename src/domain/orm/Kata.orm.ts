@@ -1,6 +1,6 @@
 /* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/semi */
-import { kataEntity } from '../entities/Kata.entity';
+import { KataEntity } from '../entities/Kata.entity';
 import { LogSuccess, LogError } from '../../utils/logger';
 import { IKata } from '../interfaces/IKata.interface';
 
@@ -8,11 +8,11 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 /**
- * Method to obtain all Users from Collection
+ * Method to obtain all Kata from Collection
  */
 export const getAllKatas = async (page: number, limit: number) => {
   try {
-    let kataModel = kataEntity();
+    let kataModel = KataEntity();
 
     let response: any = {};
     // Search all user(using pagination)
@@ -35,7 +35,7 @@ export const getAllKatas = async (page: number, limit: number) => {
 // - Get user By Id
 export const getKataById = async (id: string) : Promise<any | undefined> => {
   try {
-    let kataModel = kataEntity();
+    let kataModel = KataEntity();
     // Search User By Id
     return await kataModel.findById(id);
   } catch ( error ) {
@@ -44,9 +44,9 @@ export const getKataById = async (id: string) : Promise<any | undefined> => {
 }
 
 // - Delete Kata
-export const deleteUserById = async (id: string) : Promise<any | undefined> => {
+export const deleteKataById = async (id: string) : Promise<any | undefined> => {
   try {
-    let kataModel = kataEntity();
+    let kataModel = KataEntity();
     // Delete User By Id
     return await kataModel.deleteOne({ _id: id});
   } catch ( error ) {
@@ -57,11 +57,11 @@ export const deleteUserById = async (id: string) : Promise<any | undefined> => {
 // - Create Kata
 export const createKata = async (kata: IKata) : Promise<any | undefined> => {
   try {
-    let kataModel = kataEntity();
+    let kataModel = KataEntity();
     // Delete User By Id
     return await kataModel.create(kata);
   } catch ( error ) {
-    LogError(`[ORM ERROR]: Creating  User: ${ error }`);
+    LogError(`[ORM ERROR]: Creating  Kata: ${ error }`);
   }
 }
 

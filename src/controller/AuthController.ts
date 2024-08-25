@@ -74,7 +74,7 @@ export class AuthController implements IAuthController {
   }
 
   @Post('/logout')
-  public sync logoutUser (): Promise<any> {
+  public async logoutUser (): Promise<any> {
     throw new Error('Method not implemented.')
   }
 }

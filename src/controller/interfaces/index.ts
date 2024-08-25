@@ -10,6 +10,8 @@ export interface IHelloController {
 export interface IUserController {
   // Read all users from db
   getUsers(page: number, limit: number, id?: string) : Promise<any>
+  // get Katas of User
+  getKatas(page: number, limit: number, id?:string): Promise<any>
   deleteUser(id?: string) : Promise<any>
   updateUser(user: any, id: string) : Promise<any>
 }
@@ -25,6 +27,6 @@ export interface IKataController {
   getKatas(page: number, limit: number, id?: string) : Promise<any>
   createKata(kata: IKata): Promise<any>
   deleteKata(id?: string) : Promise<any>
-  updateKata(kata: IKata, id: string) : Promise<any>
-  
+  updateKata(id: string, kata: IKata) : Promise<any>
+   
 }

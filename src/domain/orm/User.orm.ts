@@ -10,6 +10,10 @@ import jwt from 'jsonwebtoken';
 
 import dotenv from 'dotenv';
 import { UserResponse } from '../types/UsersResponse.type';
+import { KataEntity } from '../entities/Kata.entity';
+import { IKata } from '../interfaces/IKata.interface';
+import mogoose from 'mongoose';
+import { log } from 'console';
 dotenv.config();
 
 // obtain secret key to generate JWT
@@ -17,7 +21,7 @@ const secret = process.env.SECRETKEY || 'MYSECRETKEY';
 /**
  * Method to obtain all Users from Collection
  */
-export const getAllUsers = async (page: number, limit: number) => {
+export const getAllUsers = async (page: number, limit: number): Promise<any[] | undefined> => {
   try {
     let userModel = userEntity();
 
@@ -26,7 +30,7 @@ export const getAllUsers = async (page: number, limit: number) => {
     await userModel.find()
       .limit(limit)
       .skip((page - 1) * limit)
-      .select('name email age')
+      .select('name email age katas')
       .exec().then((users: IUser[]) => {
         response.users = users;
       });
@@ -41,18 +45,18 @@ export const getAllUsers = async (page: number, limit: number) => {
   }
 }
 // - Get user By Id
-export const getUserById = async (id: string) : Promise<any | undefined> => {
+export const getUserById = async (id: string): Promise<any | undefined> => {
   try{
     let userModel = userEntity();
     // Search User By Id
-    return await userModel.findById(id).select('name email age');
+    return await userModel.findById(id).select('name email age katas');
   } catch ( error ) {
     LogError(`[ORM ERROR]: Getting  User By id: ${ error }`);
   }
 }
 
 // - Delete User
-export const deleteUserById = async (id: string) : Promise<any | undefined> => {
+export const deleteUserById = async (id: string): Promise<any | undefined> => {
   try{
     let userModel = userEntity();
     // Delete User By Id
@@ -63,7 +67,7 @@ export const deleteUserById = async (id: string) : Promise<any | undefined> => {
 }
 
 // - Create User
-export const updateUserById = async (user: any, id: string) : Promise<any | undefined> => {
+export const updateUserById = async (user: any, id: string): Promise<any | undefined> => {
   try {
     let userModel = userEntity();
     // Update User By Id
@@ -121,4 +125,43 @@ export const loginUser = async (auth: IAuth): Promise<any | undefined> => {
 // Logout User
 export const logoutUser = async (): Promise<any | undefined> => {
   
+}
+
+export const getKatasFromUSer = async (page: number, limit: number, id: string): Promise<any[] | undefined> => {
+  try {
+    let userModel = userEntity();
+    let kataModel = KataEntity();
+    let katasFound: IKata[] = [];
+    let response: any =  {
+      katas: [];
+    };
+    // Search all user(using pagination)
+    await userModel.findById(id).then(async (user: IUser) => {
+      response.user = user.email;
+
+      let objectIds: mogoose.Types.ObjectId[] = [];
+      user.katas.forEach((kataID: IKata ) => {
+        let objectID = new mogoose.Types.ObjectId(kataID);
+        objectIds.push(objectID);
+      });
+
+      console.log(objectIds);
+
+      await kataModel.find({'_id': {'$in': objectIds}}).then((katas: IKata[]) => {
+        
+        katasFound = katas;
+      });
+     
+    }).catch((error) => {
+      LogError(`[ORM ERROR]: Obtaing User: ${error}`);
+    });
+
+    console.log('katas: ',katasFound);
+    response.katas = katasFound;
+    
+
+    return response;
+  } catch (error) {
+    LogError(`[ORM ERROR]: Getting All Users: ${ error }`);
+  }
 }
