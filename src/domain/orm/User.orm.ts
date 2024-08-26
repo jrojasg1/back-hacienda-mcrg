@@ -133,7 +133,7 @@ export const getKatasFromUSer = async (page: number, limit: number, id: string):
     let kataModel = KataEntity();
     let katasFound: IKata[] = [];
     let response: any =  {
-      katas: [];
+      katas: []
     };
     // Search all user(using pagination)
     await userModel.findById(id).then(async (user: IUser) => {
