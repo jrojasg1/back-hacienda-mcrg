@@ -2,6 +2,7 @@
 import {  BasicResponse } from '../types';
 import { IUser } from '../domain/interfaces/IUser.interface';
 import { IKata } from '../domain/interfaces/IKata.interface';
+import { ICow } from '../domain/interfaces/ICow.interface';
 
 export interface IHelloController {
   getMessage: (name?: string) => Promise<BasicResponse>
@@ -28,5 +29,14 @@ export interface IKataController {
   createKata(kata: IKata): Promise<any>
   deleteKata(id?: string) : Promise<any>
   updateKata(id: string, kata: IKata) : Promise<any>
+   
+}
+
+export interface ICowController {
+  // Read all users from db
+  getCows(page: number, limit: number, id?: string) : Promise<any>
+  createCow(cow: ICow): Promise<any>
+  deleteCow(id?: string) : Promise<any>
+  updateCow(id: string, cow: ICow) : Promise<any>
    
 }

@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/semi */
 import express, { type Request, type Response } from 'express';
-import { UserController } from '../controller/UsersController';
 import { LogInfo } from '../utils/logger';
 // Body Parser to read Body from request
 import bodyParser from "body-parser";
@@ -14,7 +13,7 @@ let jsonParser = bodyParser.json();
 // Router from express
 const katasRouter = express.Router();
 
-// http://localhost:8000/api/users/?id=78595ijufdjfdfmvk7884
+// http://localhost:8000/api/kata
 katasRouter.route('/')
   .get(verifyToken, async (req: Request, res: Response) => {
     // obtain a Query Param (id)
@@ -48,7 +47,7 @@ katasRouter.route('/')
     let stars: number = req?.body?.starts || 0;
     let creator: string = req?.body?.creator;
     let solution: string = req?.body?.solution;
-    let participants: strinh[] = req?.body?.participants || [];
+    let participants: string[] = req?.body?.participants || [];
 
     LogInfo(`Query Param ${id}, ${name}, ${description}, ${level}, ${intents}, ${stars}`);
 
@@ -83,7 +82,7 @@ katasRouter.route('/')
     let stars: number = req?.body?.stars || 0;
     let creator: string = req?.body?.creator;
     let solution: string = req?.body?.solution;
-    let participants: strinh[] = req?.body?.participants || [];
+    let participants: string[] = req?.body?.participants || [];
 
     LogInfo(`Query Param ${name}, ${description}, ${level}, ${intents}, ${stars}`);
 
